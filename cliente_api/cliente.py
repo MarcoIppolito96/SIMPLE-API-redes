@@ -13,10 +13,32 @@ def prueba_inicio():
         print(f"Error al conectar con el servidor: {e}")
 
 
-def agregar(libro):
+def agregar():
     """Lógica para agregar un libro."""
-    response = requests.post('/agregar_libro')
-    print(response.text)
+    title = input('Ingresa el Titulo (ENTER SI NO APLICA)')
+    author = input('Ingresa el Autor (ENTER SI NO APLICA)')
+    country = input('Ingresa el Pais (ENTER SI NO APLICA)')
+    imageLink = input('Ingresa la URL de la imagen (ENTER SI NO APLICA)')
+    language = input('Ingresa el lenguaje (ENTER SI NO APLICA)')
+    link = input('Ingresa el link (ENTER SI NO APLICA)')
+    pages = int(input('Ingresa el numero de páginas (ENTER SI NO APLICA)'))
+    year = int(input('Ingresa el año (ENTER SI NO APLICA)'))
+
+    nuevolibro = {
+    "author": author,
+    "country": country,
+    "imageLink": imageLink,
+    "language": language,
+    "link": link,
+    "pages": pages,
+    "title": title,
+    "year": year}
+
+    response = requests.post(BASE_URL+'/agregar_libro', json = nuevolibro)
+    if response.status_code == 200:
+        print("Libro agregado correctamente:", response.json())
+    else:
+        print("Error al agregar el libro:", response.text)
 
 
 def modificar():

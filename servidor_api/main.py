@@ -1,4 +1,5 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
 import uvicorn
 import requests
 import json
@@ -13,10 +14,6 @@ with open("books_db.json", "r", encoding="utf-8") as archivo:
 
 print(type(libros))
 print(libros[0], libros[1])
-
-def abrir_bd(opc):
-    with open("books_db.json", opc, encoding="utf-8") as archivo:
-        libros = json.load(archivo) 
 
 # Leer archivo
 
@@ -42,14 +39,13 @@ def actualizar(titulo: str):
     if buscar(titulo):
         libro = buscar(titulo)
     
-
     return HTTPException(status_code=404, detail=f"Libro '{titulo}' no encontrado")
 
 
 @app.post('/agregar_libro')
-def agregar(libro: dict):
+def agregar(request: Request):
+    libro = request.json()
     libros = leer_json('books_db.json')
-
     libros.append(libro)
 
     # Sobrescribir el archivo con los datos actualizados
@@ -58,3 +54,4 @@ def agregar(libro: dict):
             json.dump(libros, archivo, ensure_ascii=False, indent=4)  # Escribir el archivo con formato bonito
     except Exception as e:
         print(str(e))
+    return JSONResponse(content={"message": "Libro agregado correctamente", "libro": libro})
