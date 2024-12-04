@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\Fede\Desktop\marco\TP FINAL REDES\env
+set VIRTUAL_ENV=C:\Users\biank\OneDrive\Escritorio\Marco\FACULTADDD\REDES\API-TP\SIMPLE-API-redes\env
 
 if not defined PROMPT set PROMPT=$P$G
 

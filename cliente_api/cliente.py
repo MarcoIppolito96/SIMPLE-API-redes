@@ -2,6 +2,16 @@ import requests
 
 BASE_URL = "http://127.0.0.1:8000"  # URL base del servidor
 
+"""
+       # Validar campos numéricos
+    try:
+        pages = int(input('Ingresa el número de páginas (ENTER SI NO APLICA): ') or 0)
+        year = int(input('Ingresa el año (ENTER SI NO APLICA): ') or 0)
+    except ValueError:
+        print("Error: Las páginas y el año deben ser números.")
+        return
+
+"""
 
 def prueba_inicio():
     """Prueba la ruta de inicio."""
@@ -11,6 +21,25 @@ def prueba_inicio():
         print(response.text)
     except requests.exceptions.RequestException as e:
         print(f"Error al conectar con el servidor: {e}")
+
+
+def buscar_libro():
+    """Lógica para buscar un libro."""
+    print('1 - Buscar por título')
+    print('2 - Buscar por autor')
+    print('0 - Salir')
+       # Validar campos numéricos
+    try:
+        opc = int(input('SELECCIONA LA BUSQUEDA ') or 0)
+    except ValueError:
+        print("Error: La opción debe ser numérica")
+        return
+    
+    if opc == 0:
+        return
+    elif opc == 1:
+        titulo = input('Ingresa el título')
+        response = requests.get(BASE_URL+'/buscar_libro')
 
 
 def agregar():
@@ -36,7 +65,8 @@ def agregar():
 
     response = requests.post(BASE_URL+'/agregar_libro', json = nuevolibro)
     if response.status_code == 200:
-        print("Libro agregado correctamente:", response.json())
+        data = response.json()
+        print(f'{data['message']}')
     else:
         print("Error al agregar el libro:", response.text)
 
@@ -58,7 +88,7 @@ def main():
         print("1 - Agregar")
         print("2 - Modificar")
         print("3 - Eliminar")
-        print("4 - Probar conexión")
+        print("4 - Buscar libro")
         
         try:
             opc = int(input("Selecciona una opción: "))
@@ -76,7 +106,7 @@ def main():
         elif opc == 3:
             eliminar()
         elif opc == 4:
-            prueba_inicio()
+            buscar_libro()
         else:
             print("Opción no válida. Por favor, intenta de nuevo.")
 

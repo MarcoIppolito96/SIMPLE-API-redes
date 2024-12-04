@@ -17,7 +17,7 @@ print(libros[0], libros[1])
 
 # Leer archivo
 
-def leer_json(archivo):
+def leer_json(archivo: str) -> dict:
     """Lee el contenido de un archivo JSON y lo devuelve como un objeto de Python."""
     with open(archivo, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -28,11 +28,15 @@ def inicio():
 
 
 @app.get('/buscar_libro')
-def buscar(titulo: str):
+def buscar(request: Request):
+    dato = request.json()
+    print(dato)
+    """
+    libros = leer_json('books_db.json')
     for libro in libros:
-        if titulo == libro['title']:
+        if request == libro['title']:
             return libro
-    return HTTPException(status_code=404, detail=f"Libro '{titulo}' no encontrado")
+    return HTTPException(status_code=404, detail=f"Libro '{titulo}' no encontrado")"""
 
 @app.put('/actualizar_libro')
 def actualizar(titulo: str):
@@ -43,8 +47,8 @@ def actualizar(titulo: str):
 
 
 @app.post('/agregar_libro')
-def agregar(request: Request):
-    libro = request.json()
+async def agregar(request: Request):
+    libro = await request.json()
     libros = leer_json('books_db.json')
     libros.append(libro)
 
@@ -54,4 +58,4 @@ def agregar(request: Request):
             json.dump(libros, archivo, ensure_ascii=False, indent=4)  # Escribir el archivo con formato bonito
     except Exception as e:
         print(str(e))
-    return JSONResponse(content={"message": "Libro agregado correctamente", "libro": libro})
+    return JSONResponse(content={"message": f"Libro '{libro['title']}'agregado correctamente"}) #, "libro": libro
