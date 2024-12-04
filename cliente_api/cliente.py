@@ -39,8 +39,8 @@ def buscar_libro():
         return
     elif opc == 1:
         titulo = input('Ingresa el título')
-        response = requests.get(BASE_URL+'/buscar_libro')
-
+        response = requests.get(BASE_URL+'/buscar_libro', params={'title': titulo})
+        print(response.json())
 
 def agregar():
     """Lógica para agregar un libro."""
