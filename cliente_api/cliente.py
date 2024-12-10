@@ -40,7 +40,41 @@ def buscar_libro():
     elif opc == 1:
         titulo = input('Ingresa el título')
         response = requests.get(BASE_URL+'/buscar_libro', params={'title': titulo})
-        print(response.json())
+        data = response.json()
+        if 'resultado' in data:
+            resultado = data['resultado']
+            print(f"Se encontraron {len(resultado)} libros")
+            print("Titulos: ")
+            for i,libro in enumerate(resultado, start=1):
+                print(f"----LIBRO {i}----")
+                print(f"{libro['title']}")
+            
+            resp = int(input('Querés ver informacion de alguno? Ingresa el nro de libro (0 si no queres ver ninguno): '))
+            if resp == 0:
+                return
+            elif 1 <= resp <= len(resultado):
+                libro_seleccionado = resultado[resp - 1] # Esto es por que si selecciona el 1 deberia ser el indice 0 de la lista
+                print("\nInformación detallada del libro:")
+                for clave, valor in libro_seleccionado.items():
+                    print(f"{clave}: {valor}")
+            else:
+                print("Número inválido.")
+        else:
+            print("No se encontraron resultados.")
+
+            
+
+
+"""
+            for i,libro in enumerate(resultado, start=1):
+                print(f"----LIBRO {i}----")
+                for clave, valor in libro.items():
+                    print(f"{clave}: {valor}")
+                    
+            print(resultado, type(resultado))"""
+            #for clave, valor in resultado.items():
+             #   print(f"{clave}: valor")
+
 
 def agregar():
     """Lógica para agregar un libro."""

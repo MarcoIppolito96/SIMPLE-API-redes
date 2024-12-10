@@ -29,8 +29,18 @@ def inicio():
 
 @app.get('/buscar_libro')
 def buscar(request: Request):
-    dato = request.json()
-    print(dato)
+    params = request.query_params
+    print(params, "params")
+    title = params.get("title")
+    resultado = []
+    libros = leer_json('books_db.json')
+    for libro in libros:
+        if title.lower() in libro["title"].lower(): #Utilizo operador in para ver si ese texto esta contenido en el título
+            resultado.append(libro)
+    
+    return JSONResponse(content={"message": f"Se encontraron {len(resultado)} libros.'", 'resultado': resultado})
+
+    
     """
     libros = leer_json('books_db.json')
     for libro in libros:
