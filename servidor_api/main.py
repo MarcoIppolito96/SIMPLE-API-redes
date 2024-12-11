@@ -65,7 +65,7 @@ async def agregar(request: Request):
     # Sobrescribir el archivo con los datos actualizados
     try:
         with open("books_db.json", "w", encoding="utf-8") as archivo:
-            json.dump(libros, archivo, ensure_ascii=False, indent=4)  # Escribir el archivo con formato bonito
+            json.dump(libros, archivo, ensure_ascii=False, indent=4)  # Escribir el archivo con formato bonito, convierte li
     except Exception as e:
         print(str(e))
     return JSONResponse(content={"message": f"Libro '{libro['title']}'agregado correctamente"}) #, "libro": libro

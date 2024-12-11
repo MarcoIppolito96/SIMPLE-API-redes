@@ -42,7 +42,7 @@ def buscar_libro():
         response = requests.get(BASE_URL+'/buscar_libro', params={'title': titulo})
         data = response.json()
         if 'resultado' in data:
-            resultado = data['resultado']
+            resultado = data['resultado'] #Acá obtengo los libros quedandome con el parametro resultado (que es donde el servidor me devuelve los libros)
             print(f"Se encontraron {len(resultado)} libros")
             print("Titulos: ")
             for i,libro in enumerate(resultado, start=1):
@@ -53,7 +53,7 @@ def buscar_libro():
             if resp == 0:
                 return
             elif 1 <= resp <= len(resultado):
-                libro_seleccionado = resultado[resp - 1] # Esto es por que si selecciona el 1 deberia ser el indice 0 de la lista
+                libro_seleccionado = resultado[resp - 1] # Esto es por que si se selecciona el 1 deberia ser el indice 0 de la lista (al final es un diccionario)
                 print("\nInformación detallada del libro:")
                 for clave, valor in libro_seleccionado.items():
                     print(f"{clave}: {valor}")
@@ -78,14 +78,32 @@ def buscar_libro():
 
 def agregar():
     """Lógica para agregar un libro."""
-    title = input('Ingresa el Titulo (ENTER SI NO APLICA)')
-    author = input('Ingresa el Autor (ENTER SI NO APLICA)')
-    country = input('Ingresa el Pais (ENTER SI NO APLICA)')
-    imageLink = input('Ingresa la URL de la imagen (ENTER SI NO APLICA)')
-    language = input('Ingresa el lenguaje (ENTER SI NO APLICA)')
-    link = input('Ingresa el link (ENTER SI NO APLICA)')
-    pages = int(input('Ingresa el numero de páginas (ENTER SI NO APLICA)'))
-    year = int(input('Ingresa el año (ENTER SI NO APLICA)'))
+    title = input('Ingresa el Titulo (ENTER SI NO APLICA)').strip()
+    author = input('Ingresa el Autor (ENTER SI NO APLICA)').strip()
+    country = input('Ingresa el Pais (ENTER SI NO APLICA)').strip()
+    imageLink = input('Ingresa la URL de la imagen (ENTER SI NO APLICA)').strip()
+    language = input('Ingresa el lenguaje (ENTER SI NO APLICA)').strip()
+    link = input('Ingresa el link (ENTER SI NO APLICA)').strip()
+
+    while True:
+        pages = input('Ingresa el numero de páginas (ENTER SI NO APLICA)').strip()
+        if pages.strip() == "":
+            break
+        if pages.isdigit():
+            pages = int(pages)
+            break
+        else:
+            print("Por favor ingresá un numero válido")
+
+    while True:
+        year = input('Ingresa el año (ENTER SI NO APLICA)').strip()
+        if year.strip() == "":
+            break
+        if year.isdigit():
+            year = int(year)
+            break
+        else:
+            print("Por favor ingresá un numero válido")
 
     nuevolibro = {
     "author": author,
@@ -106,8 +124,32 @@ def agregar():
 
 
 def modificar():
-    """Lógica para modificar un libro."""
-    print("Funcionalidad para modificar un libro (no implementada aún).")
+    titulo = input("Ingresá el título del libro que queres modificar: ")
+    response = requests.get(BASE_URL+'/buscar_libro', params={'title': titulo})
+    
+    while True:
+        if response.status_code != 200:
+            titulo = input("Título no encontrado, ingresá el título o parte del mismo que queres modificar: ")
+            response = requests.get(BASE_URL+'/buscar_libro', params={'title': titulo})
+            continue
+
+        data = response.json()
+        resultado = data.get('resultado', []) # Si la clave 'resultado' no esta en el JSON, para que no se produzca un error se asigna una lista vacía
+        if len(resultado) == 0:
+            print("No se encontraron libros con ese título. Por favor, ingresá un título diferente.")
+            titulo = input("Ingresá el título o parte del mismo que querés modificar: ")
+            response = requests.get(BASE_URL + '/buscar_libro', params={'title': titulo})
+            continue #En caso que se cumpla esto, ignora la parte de que se encuentre resultados (por que no sucede) osea vuelve al input del titulo
+        
+        # Caso en que se encuentran resultados
+        print(f"Se encontró una cantidad de {len(resultado)} libro/s")
+        print("Los títulos son: ")
+        for libro in resultado:
+            print(f"{libro['title']}")
+            print('----------------------')
+        
+        # Sale del bucle
+        break
 
 
 def eliminar():
