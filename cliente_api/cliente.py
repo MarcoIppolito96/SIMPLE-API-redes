@@ -62,19 +62,6 @@ def buscar_libro():
         else:
             print("No se encontraron resultados.")
 
-            
-
-
-"""
-            for i,libro in enumerate(resultado, start=1):
-                print(f"----LIBRO {i}----")
-                for clave, valor in libro.items():
-                    print(f"{clave}: {valor}")
-                    
-            print(resultado, type(resultado))"""
-            #for clave, valor in resultado.items():
-             #   print(f"{clave}: valor")
-
 
 def agregar():
     """Lógica para agregar un libro."""
@@ -144,12 +131,45 @@ def modificar():
         # Caso en que se encuentran resultados
         print(f"Se encontró una cantidad de {len(resultado)} libro/s")
         print("Los títulos son: ")
-        for libro in resultado:
+        for i,libro in enumerate(resultado, start=1):
+            print(f"----LIBRO {i}----")
             print(f"{libro['title']}")
-            print('----------------------')
-        
+        resp = int(input('Querés modificar alguno? Ingresa el nro de libro (0 si no queres modificar ninguno de ellos): '))
+        if resp == 0:
+            return
+        elif 1 <= resp <= len(resultado):
+            libro_seleccionado = resultado[resp - 1] # Esto es por que si se selecciona el 1 deberia ser el indice 0 de la lista (al final es un diccionario)
+            print("\nInformación detallada del libro:")
+            for clave, valor in libro_seleccionado.items():
+                print(f"{clave}: {valor}")
+                while True:
+                    try:
+                        opc = int(input("Querés modificar este atributo? 1 = Si | 0 = No") or 0)
+                    except ValueError:
+                        print("Error: La opción debe ser numérica")
+                        continue
+                    break
+                if opc == 1:
+                    if valor.isdigit():
+                        while True:
+                            try:
+                                nuevo_valor = int(input("Ingresá el nuevo valor: ") or None)
+                            except ValueError:
+                                print("Error: La opción debe ser numérica")
+                                continue
+                            break
+                        libro_seleccionado[clave] = nuevo_valor
+                    else:
+                        nuevo_valor = input('Ingresá el nuevo valor: ')
+                        libro_seleccionado[clave] = nuevo_valor
+                else:
+                    continue      
+            for clave, valor in libro_seleccionado.items():
+                print(f"{clave}: {valor}")
+        else:
+            print("Número inválido.")
         # Sale del bucle
-        break
+        #break
 
 
 def eliminar():
