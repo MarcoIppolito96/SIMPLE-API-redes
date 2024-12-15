@@ -2,17 +2,6 @@ import requests
 
 BASE_URL = "http://127.0.0.1:8000"  # URL base del servidor
 
-"""
-       # Validar campos numéricos
-    try:
-        pages = int(input('Ingresa el número de páginas (ENTER SI NO APLICA): ') or 0)
-        year = int(input('Ingresa el año (ENTER SI NO APLICA): ') or 0)
-    except ValueError:
-        print("Error: Las páginas y el año deben ser números.")
-        return
-
-"""
-
 def prueba_inicio():
     """Prueba la ruta de inicio."""
     try:
@@ -21,6 +10,19 @@ def prueba_inicio():
         print(response.text)
     except requests.exceptions.RequestException as e:
         print(f"Error al conectar con el servidor: {e}")
+
+def solicitar_credenciales():
+    while True:
+        usuario = input("Usuario: ")
+        contraseña = input("Contraseña: ")
+
+        response = requests.post(f"{BASE_URL}/login", json={"usuario": usuario, "contrasenia": contraseña})
+
+        if response.status_code == 200:
+            print("Autenticación exitosa")
+            break  # Salir del bucle si las credenciales son correctas
+        else:
+            print("Credenciales incorrectas, intenta nuevamente")
 
 
 def buscar_libro():
@@ -282,4 +284,5 @@ def main():
 # Ejecutar el programa
 if __name__ == "__main__":
     prueba_inicio()
+    solicitar_credenciales()
     main()

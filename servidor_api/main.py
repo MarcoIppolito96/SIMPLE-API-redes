@@ -12,6 +12,10 @@ with open("books_db.json", "r", encoding="utf-8") as archivo:
     #peliculas es una lista de diccionarios
 print(f"Cantidad de libros al iniciar servidor: {len(libros)}") 
 
+class Usuario(BaseModel):
+    usuario: str
+    contrasenia: str
+
 class Libro(BaseModel):
     title: str
     author: str = None
@@ -23,6 +27,16 @@ class Libro(BaseModel):
     pages: int = None
 
 # Leer archivo
+
+@app.post("/login")
+def login(usuario: Usuario):
+    with open("usuarios.json", "r") as f:
+        usuarios = json.load(f)
+    print(usuarios)
+    for u in usuarios:
+        if u["usuario"] == usuario.usuario and u["contrasenia"] == usuario.contrasenia:
+            return {"message": "Autenticación exitosa"}
+    raise HTTPException(status_code=401, detail="Credenciales incorrectas")
 
 def leer_json(archivo: str) -> dict:
     """Lee el contenido de un archivo JSON y lo devuelve como un objeto de Python."""
