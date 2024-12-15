@@ -10,7 +10,7 @@ app = FastAPI()
 with open("books_db.json", "r", encoding="utf-8") as archivo:
     libros = json.load(archivo) 
     #peliculas es una lista de diccionarios
-print(f"Cantidad de libros al iniciar servidor: {len(libros)}")
+print(f"Cantidad de libros al iniciar servidor: {len(libros)}") 
 
 class Libro(BaseModel):
     title: str
