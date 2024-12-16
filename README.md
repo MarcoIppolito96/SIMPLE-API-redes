@@ -1,4 +1,4 @@
-#INSTRUCCIONES PUNTA A PUNTA
+INSTRUCCIONES PUNTA A PUNTA
 
 Para utilizar el programa como cliente y servidor desde un mismo host los pasos son los siguientes:
 1)	Clonar el repositorio subido a github: 
